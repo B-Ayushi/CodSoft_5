@@ -1,0 +1,185 @@
+package codsoft;
+import java.util.*;
+
+class Course {
+    Scanner sc = new Scanner(System.in);
+    int num;
+    String arr[];
+    String arr1[];
+
+    void detail() {
+        System.out.println("Enter the number of courses for batch 2024-25 (Atleast 3 courses required)");
+        num = sc.nextInt();
+        sc.nextLine(); // consume the newline character left by nextInt()
+
+        arr = new String[num];
+        arr1 = new String[num];
+
+        System.out.println("Enter the names of courses:");
+        for (int i = 0; i < num; i++) {
+            arr[i] = sc.nextLine();
+        }
+
+        System.out.println("Enter the description of courses provided:");
+        for (int i = 0; i < num; i++) {
+            arr1[i] = sc.nextLine();
+        }
+    }
+
+    String[] getCourses() {
+        return arr;
+    }
+
+    String[] getCourseDescriptions() {
+        return arr1;
+    }
+}
+
+class Student {
+	String[] getCourse() {
+        return n;
+    }
+
+	String n[];
+	String books[];
+	Scanner sc = new Scanner(System.in);
+    String name;
+    Course course; // Reference to the Course object
+
+    Student(String name, Course course) {
+        this.name = name;
+        this.course = course;
+    }
+
+    void displayCourses() {
+        System.out.println("Courses for " + name + ":");
+        String[] courses = course.getCourses();
+        String[] descriptions = course.getCourseDescriptions();
+        for (int i = 0; i < courses.length; i++) {
+            System.out.println("Course: " + courses[i] + ", Description: " + descriptions[i]);
+        }
+    }
+    void add() {
+        String[] courses = course.getCourses();
+        String[] descriptions = course.getCourseDescriptions();
+
+        System.out.println("Enter the no of courses you want to enroll in");
+        System.out.println("Maximum limit := 3");
+        int co = sc.nextInt();
+
+        // Validate the number of courses
+        if (co > 3) {
+            System.out.println("Maximum limit exceeded. You can enroll in at most 3 courses.");
+            return;
+        }
+
+        n = new String[co];
+
+        System.out.println("Available Courses");
+        for (int i = 0; i < courses.length; i++) {
+            System.out.println("Course: " + courses[i] + ", Description: " + descriptions[i]);
+        }
+
+        System.out.println("Enter your courses");
+        sc.nextLine(); // Consume newline character
+        for (int i = 0; i < co; i++) {
+            n[i] = sc.nextLine();
+        }
+
+        // Display selected courses
+        System.out.println("SELECTED COURSES : ");
+        for (int i = 0; i < co; i++) {
+            System.out.println("Course: " + n[i]);
+        }
+    }
+
+    
+    void withdraw() {
+        System.out.println("Enter the number of courses you want to withdraw");
+        int numCoursesToWithdraw = sc.nextInt();
+        sc.nextLine(); // Consume newline character
+
+        // Ensure the number of courses to withdraw does not exceed the total selected courses
+        if (numCoursesToWithdraw > n.length) {
+            System.out.println("Number of courses to withdraw exceeds total selected courses.");
+            return;
+        }
+
+        System.out.println("Selected Courses:");
+        for (int i = 0; i < n.length; i++) {
+            System.out.println((i + 1) + ". " + n[i]);
+        }
+
+        // Input the courses to withdraw
+        System.out.println("Enter the index(es) of courses you want to withdraw (1 to " + n.length + "):");
+        int[] coursesToWithdrawIndices = new int[numCoursesToWithdraw];
+        for (int i = 0; i < numCoursesToWithdraw; i++) {
+            coursesToWithdrawIndices[i] = sc.nextInt() - 1; // Adjust index to match array indices
+        }
+
+        // Create a new array to store the updated selected courses
+        String[] updatedCourses = new String[n.length - numCoursesToWithdraw];
+        int updatedIndex = 0;
+
+        // Copy courses excluding the ones to withdraw
+        for (int i = 0; i < n.length; i++) {
+            boolean shouldExclude = false;
+            for (int j = 0; j < coursesToWithdrawIndices.length; j++) {
+                if (i == coursesToWithdrawIndices[j]) {
+                    shouldExclude = true;
+                    break;
+                }
+            }
+            if (!shouldExclude) {
+                updatedCourses[updatedIndex++] = n[i];
+            }
+        }
+
+        // Update the selected courses array
+        n = updatedCourses;
+
+        // Display updated selected courses
+        System.out.println("Updated Selected Courses:");
+        for (String course : n) {
+            System.out.println(course);
+        }
+    }
+
+}
+
+public class Task5 {
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+        Course c = new Course();
+        System.out.println("*****WELCOME TO COURSE REGISTRATION PORTAL********");
+        System.out.println("1)Administration Login \n2)Student Login");
+        while(true) {
+            System.out.println("Enter your choice");
+            int choice = sc.nextInt();
+                
+            switch(choice) {
+                case 1:
+                    // Administration Login
+                    c.detail();
+                    break;
+                case 2:
+                    // Student Login
+                    System.out.println("Enter student name:");
+                    String studentName = sc.next();
+                    Student student = new Student(studentName, c);
+                    student.displayCourses();
+                    student.add();
+                    System.out.println("If You Want To remove a course enter 1 otherwise enter 0");
+                    int m=sc.nextInt();
+                    if(m==1) {
+                    	student.withdraw();
+                    }
+                    break;
+            
+        case 0:
+            // Exit the program
+            return;
+                    }
+    }
+}
+}
